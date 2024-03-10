@@ -334,6 +334,33 @@ class Top10(object):
         self.multi.extend([o for o in other_top10.multi])
         self.sort()
 
+    def from_buffer(self, buffer: bytes) -> None:
+        """
+        Unpack a top10 from its binary representation readable by Elasto Mania.
+        """
+        top10_data = iter(buffer)
+
+        def munch(n: int, dataiter: Iterator[int] = top10_data) -> bytes:
+            return b''.join([bytes(chr(next(dataiter)), 'latin1')
+                            for _ in range(n)])
+
+        for top10_block in ['single', 'multi']:
+            time_count = struct.unpack('I', munch(4))[0]
+            times = [struct.unpack('i', munch(4))[0] for _ in range(10)]
+            kuskis1 = [munch(15).split(b'\0')[0].decode('latin1') for _ in range(10)]
+            kuskis2 = [munch(15).split(b'\0')[0].decode('latin1') for _ in range(10)]
+            times = times[:time_count]
+            kuskis1 = kuskis1[:time_count]
+            kuskis2 = kuskis2[:time_count]
+            if top10_block == 'single':
+                self.single = [Top10Time(t, kuskis1[i], kuskis2[i])
+                               for i, t in enumerate(times)
+                               if (t > 0 and len(kuskis1[i]) > 0)]
+            else:
+                self.multi = [Top10Time(t, kuskis1[i], kuskis2[i], True)
+                              for i, t in enumerate(times)
+                              if (t > 0 and len(kuskis1[i]) > 0 and len(kuskis2[i]) > 0)]
+
     def to_buffer(self) -> bytes:
         self.sort()
         return b''.join([

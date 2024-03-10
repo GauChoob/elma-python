@@ -7,6 +7,7 @@ from typing import Union, Iterator, TYPE_CHECKING
 import elma.models
 from elma.constants import VERSION_ELMA
 from elma.constants import VERSION_ACROSS
+from elma.constants import TOP10_SIZE
 from elma.constants import END_OF_DATA_MARKER
 from elma.constants import END_OF_DATA_MARKER_OLD
 from elma.constants import END_OF_FILE_MARKER
@@ -232,31 +233,7 @@ def unpack_level(packed_item: bytes) -> elma.models.Level:
         assert (struct.unpack('I', eod_marker)[0] in
                 [END_OF_DATA_MARKER, END_OF_DATA_MARKER_OLD])
 
-    top10 = iter(crypt_top10(munch(688)))
-    for top10_block in ['single', 'multi']:
-        times = []
-        kuskis1 = []
-        kuskis2 = []
-        time_count = struct.unpack('I', munch(4, top10))[0]
-        for _ in range(10):
-            times.append(struct.unpack('I', munch(4, top10))[0])
-        for _ in range(10):
-            kuskis1.append(munch(15, top10).split(b'\0')[0].decode('latin1'))
-        for _ in range(10):
-            kuskis2.append(munch(15, top10).split(b'\0')[0].decode('latin1'))
-        times = times[:time_count]
-        kuskis1 = kuskis1[:time_count]
-        kuskis2 = kuskis2[:time_count]
-        if top10_block == 'single':
-            level.top10.single = [elma.models.Top10Time(t, kuskis1[i], kuskis2[i])
-                                  for i, t in enumerate(times)
-                                  if (t > 0 and len(kuskis1[i]) > 0)]
-        else:
-            level.top10.multi = [elma.models.Top10Time(t, kuskis1[i], kuskis2[i], True)
-                                 for i, t in enumerate(times)
-                                 if (t > 0 and len(kuskis1[i]) > 0 and
-                                     len(kuskis2[i]) > 0)]
-
+    level.top10.from_buffer(crypt_top10(munch(TOP10_SIZE)))
     assert (struct.unpack('I', munch(4))[0] == END_OF_FILE_MARKER)
     return level
 
