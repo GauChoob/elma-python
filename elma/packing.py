@@ -8,6 +8,7 @@ import elma.models
 from elma.constants import VERSION_ELMA
 from elma.constants import VERSION_ACROSS
 from elma.constants import END_OF_DATA_MARKER
+from elma.constants import END_OF_DATA_MARKER_OLD
 from elma.constants import END_OF_FILE_MARKER
 from elma.constants import END_OF_REPLAY_FILE_MARKER
 from elma.utils import null_padded, crypt_top10
@@ -225,7 +226,11 @@ def unpack_level(packed_item: bytes) -> elma.models.Level:
         else:
             eod_marker = munch(4, iter([nextbyte] + [b for b in munch(3)]))
 
-    assert (struct.unpack('I', eod_marker)[0] == END_OF_DATA_MARKER)
+    if is_elma:
+        assert (struct.unpack('I', eod_marker)[0] == END_OF_DATA_MARKER)
+    else:
+        assert (struct.unpack('I', eod_marker)[0] in
+                [END_OF_DATA_MARKER, END_OF_DATA_MARKER_OLD])
 
     top10 = iter(crypt_top10(munch(688)))
     for top10_block in ['single', 'multi']:
