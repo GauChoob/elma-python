@@ -1,8 +1,11 @@
 VERSION_ELMA = 'POT14'
 VERSION_ACROSS = 'POT06'
 END_OF_DATA_MARKER = 0x0067103A
+END_OF_DATA_MARKER_OLD = 0xB76A0515
 END_OF_FILE_MARKER = 0x00845D52
 END_OF_REPLAY_FILE_MARKER = 0x00492F75
+
+TOP10_SIZE = 688
 TOP10_SINGLEPLAYER = [
     21, 5, 106, 183, 137, 237, 89, 196, 72, 255, 143, 115, 118, 188, 112, 192,
     223, 87, 180, 47, 13, 158, 7, 188, 99, 8, 111, 138, 9, 40, 173, 56, 224,
@@ -130,6 +133,32 @@ LGR_DEFAULT_PALETTE = [
     48, 48, 80, 88, 148, 196, 220, 0, 0, 212, 212, 212, 0, 8, 156, 0, 148, 196,
     88, 80, 80, 72, 220, 40, 16, 80, 172, 228, 128, 96, 204, 64, 24, 252, 252,
     252]
+
+INTERNAL_NAMES = [
+    "Warm Up", "Flat Track", "Twin Peaks", "Over and Under", "Uphill Battle",
+    "Long Haul", "Hi Flyer", "Tag", "Tunnel Terror", "The Steppes",
+    "Gravity Ride", "Islands in the Sky", "Hill Legend", "Loop-de-Loop",
+    "Serpents Tale", "New Wave", "Labyrinth", "Spiral", "Turnaround",
+    "Upside Down", "Hangman", "Slalom", "Quick Round", "Ramp Frenzy",
+    "Precarious", "Circuitous", "Shelf Life", "Bounce Back", "Headbanger",
+    "Pipe", "Animal Farm", "Steep Corner", "Zig-Zag", "Bumpy Journey",
+    "Labyrinth Pro", "Fruit in the Den", "Jaws", "Curvaceous", "Haircut",
+    "Double Trouble", "Framework", "Enduro", "He He", "Freefall", "Sink",
+    "Bowling", "Enigma", "Downhill", "What the Heck", "Expert System",
+    "Tricks Abound", "Hang Tight", "Hooked", "Apple Harvest", "More Levels"]
+
+STATEDAT_SIZE = 67910
+STATEDAT_START = 200
+STATEDAT_NUM_LEVELS = 90
+STATEDAT_NUM_INTERNALS = 54
+STATEDAT_NUM_PLAYERS = 50
+STATEDAT_PLAYER_STRUCT_SIZE = 116
+STATEDAT_PLAYERENTRY_PADDING = 38
+STATEDAT_PLAYERENTRY_NAME_SIZE = 16
+STATEDAT_PLAYER_NAME_SIZE = 15
+STATEDAT_LEVEL_NAME_SIZE = 20
+STATEDAT_REGISTERED = 0x75B6D1D
+STATEDAT_SHAREWARE = 0x75B6CB0
 
 OBJECT_RADIUS = 0.4
 WHEEL_RADIUS = 0.4

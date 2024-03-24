@@ -6,13 +6,13 @@ import struct
 from abc import ABCMeta
 from math import cos, sin
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Iterator
 from PIL import Image
 
 import elma.packing
 from elma.constants import VERSION_ELMA
 from elma.render import LevelRenderer
-from elma.utils import null_padded, BoundingBox, check_writable_file
+from elma.utils import null_padded, format_time, BoundingBox, check_writable_file
 
 __all__ = [
     "Point",
@@ -283,11 +283,12 @@ class Top10Time(object):
         self.is_multi = is_multi
 
     def __repr__(self) -> str:
-        if self.is_multi:
-            return ('Top10Time(time: %s, kuski: %s, kuski2: %s)' %
-                    (self.time, self.kuski, self.kuski2))
-        else:
-            return 'Top10Time(time: %s, kuski: %s)' % (self.time, self.kuski)
+        multi_str = f', kuski2: {self.kuski2}' if self.is_multi else ''
+        return f'Top10Time(time: {self.time}, kuski: {self.kuski}{multi_str})'
+
+    def __str__(self) -> str:
+        multi_str = f', {self.kuski2}' if self.is_multi else ''
+        return f'{format_time(self.time)}    {self.kuski}{multi_str}'
 
     def __eq__(self, other_time: object) -> bool:
         if not isinstance(other_time, Top10Time):
@@ -313,6 +314,12 @@ class Top10(object):
     def __repr__(self) -> str:
         return 'Top10(single: %s, multi: %s)' % (self.single, self.multi)
 
+    def __eq__(self, other_top10: object) -> bool:
+        if not isinstance(other_top10, Top10):
+            return NotImplemented
+        return (self.single == other_top10.single and
+                self.multi == other_top10.multi)
+
     def sort(self) -> None:
         self.single = sorted(self.single, key=lambda t: t.time)[:10]
         self.multi = sorted(self.multi, key=lambda t: t.time)[:10]
@@ -334,12 +341,91 @@ class Top10(object):
         self.multi.extend([o for o in other_top10.multi])
         self.sort()
 
-    def to_buffer(self) -> bytes:
+    def best_time(self, kuski: Optional[str], single: bool = True) -> Optional[int]:
+        """
+        Return the best time in the top10, for a given player or overall.
+
+        Args:
+            kuski (str): Name of the player, or None for the global best time.
+            single (int): Whether to find the best single or multi time.
+
+        Returns:
+            The best time as hundredths, or None if the player has no times in the
+            top10 (or if the top10 is empty when the global best time is requested).
+        """
+        if kuski is None:
+            top10_block = self.single if single else self.multi
+            pr = top10_block[0].time if len(top10_block) > 0 else None
+        else:
+            if single:
+                player_times = [t.time for t in self.single if kuski == t.kuski]
+            else:
+                player_times = [t.time for t in self.multi if kuski in [t.kuski, t.kuski2]]
+            pr = min(player_times) if len(player_times) > 0 else None
+        return pr
+
+    def formatted_print(self, single: bool = True, indent: int = 0) -> str:
+        """
+        Represent the top10 in an easily readable form (as in stats.txt).
+
+        Args:
+            single (bool): Return either the single or multi top10.
+            indent (int): Add leading spaces to indent the rows.
+
+        Returns:
+            The top10 as a formatted string of up to 10 rows.
+        """
+        self.sort()
+        prefix = ' ' * indent
+        top10_block = self.single if single else self.multi
+        return ('\n'.join([f'{prefix}{str(t)}' for t in top10_block])
+                if len(top10_block) > 0 else '')
+
+    def from_buffer(self, buffer: bytes) -> None:
+        """
+        Unpack a top10 from its binary representation readable by Elasto Mania.
+        """
+        top10_data = iter(buffer)
+
+        def munch(n: int, dataiter: Iterator[int] = top10_data) -> bytes:
+            return b''.join([bytes(chr(next(dataiter)), 'latin1')
+                            for _ in range(n)])
+
+        for top10_block in ['single', 'multi']:
+            time_count = struct.unpack('I', munch(4))[0]
+            times = [struct.unpack('i', munch(4))[0] for _ in range(10)]
+            kuskis1 = [munch(15).split(b'\0')[0].decode('latin1') for _ in range(10)]
+            kuskis2 = [munch(15).split(b'\0')[0].decode('latin1') for _ in range(10)]
+            times = times[:time_count]
+            kuskis1 = kuskis1[:time_count]
+            kuskis2 = kuskis2[:time_count]
+            if top10_block == 'single':
+                self.single = [Top10Time(t, kuskis1[i], kuskis2[i])
+                               for i, t in enumerate(times)
+                               if (t > 0 and len(kuskis1[i]) > 0)]
+            else:
+                self.multi = [Top10Time(t, kuskis1[i], kuskis2[i], True)
+                              for i, t in enumerate(times)
+                              if (t > 0 and len(kuskis1[i]) > 0 and len(kuskis2[i]) > 0)]
+
+    def to_buffer(self, merged_internal: bool = False) -> bytes:
+        """
+        Pack a top10 to its binary representation readable by Elasto Mania.
+
+        Args:
+            merged_internal (bool): Elma's internal merge.dat feature changes 0 in
+                empty time slots to -1. This is not detected automatically, just a
+                hidden option if you want to preserve them in state.dat for some reason.
+
+        Returns:
+            The binary representation of the top10.
+        """
+        empty_time = -1 if merged_internal else 0
         self.sort()
         return b''.join([
             struct.pack('I', len(self.single)),
-            b''.join([struct.pack('I', t.time) for t in self.single]),
-            b''.join([struct.pack('I', 0)
+            b''.join([struct.pack('i', t.time) for t in self.single]),
+            b''.join([struct.pack('i', empty_time)
                       for _ in range(10 - len(self.single))]),
             b''.join([null_padded(t.kuski, 15) for t in self.single]),
             b''.join([null_padded('', 15)
@@ -348,8 +434,8 @@ class Top10(object):
             b''.join([null_padded('', 15)
                       for _ in range(10 - len(self.single))]),
             struct.pack('I', len(self.multi)),
-            b''.join([struct.pack('I', t.time) for t in self.multi]),
-            b''.join([struct.pack('I', 0)
+            b''.join([struct.pack('i', t.time) for t in self.multi]),
+            b''.join([struct.pack('i', empty_time)
                       for _ in range(10 - len(self.multi))]),
             b''.join([null_padded(t.kuski, 15) for t in self.multi]),
             b''.join([null_padded('', 15)

@@ -91,6 +91,16 @@ replay.save('myreplay.rec')
 ```
 
 
+### Reading a state.dat and creating stats.txt
+```python
+from elma import State
+state = State.load('state.dat')
+print(state)  # prints the players and their total times
+with open('stats.txt', 'w') as f:
+    f.write(state.stats_txt())
+```
+
+
 ## Development setup
 
 ```

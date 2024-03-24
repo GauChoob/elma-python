@@ -1,0 +1,257 @@
+This text file is generated automatically each time you quit the
+ELMA.EXE program. If you modify this file, you will loose the
+changes next time you run the game. This is only an output file, the
+best times are stored in the STATE.DAT binary file.
+Registered version 1.3
+
+Single player times:
+
+Level 1, Warm Up:
+    00:14:53    snake
+
+Level 2, Flat Track:
+    00:17:37    boa
+
+Level 3, Twin Peaks:
+    00:20:50    boa
+
+Level 4, Over and Under:
+
+Level 5, Uphill Battle:
+
+Level 6, Long Haul:
+
+Level 7, Hi Flyer:
+
+Level 8, Tag:
+
+Level 9, Tunnel Terror:
+
+Level 10, The Steppes:
+
+Level 11, Gravity Ride:
+
+Level 12, Islands in the Sky:
+
+Level 13, Hill Legend:
+
+Level 14, Loop-de-Loop:
+
+Level 15, Serpents Tale:
+
+Level 16, New Wave:
+
+Level 17, Labyrinth:
+
+Level 18, Spiral:
+
+Level 19, Turnaround:
+
+Level 20, Upside Down:
+
+Level 21, Hangman:
+
+Level 22, Slalom:
+
+Level 23, Quick Round:
+
+Level 24, Ramp Frenzy:
+
+Level 25, Precarious:
+
+Level 26, Circuitous:
+
+Level 27, Shelf Life:
+
+Level 28, Bounce Back:
+
+Level 29, Headbanger:
+
+Level 30, Pipe:
+
+Level 31, Animal Farm:
+
+Level 32, Steep Corner:
+
+Level 33, Zig-Zag:
+
+Level 34, Bumpy Journey:
+
+Level 35, Labyrinth Pro:
+
+Level 36, Fruit in the Den:
+
+Level 37, Jaws:
+
+Level 38, Curvaceous:
+
+Level 39, Haircut:
+
+Level 40, Double Trouble:
+
+Level 41, Framework:
+
+Level 42, Enduro:
+
+Level 43, He He:
+
+Level 44, Freefall:
+
+Level 45, Sink:
+
+Level 46, Bowling:
+
+Level 47, Enigma:
+
+Level 48, Downhill:
+
+Level 49, What the Heck:
+
+Level 50, Expert System:
+
+Level 51, Tricks Abound:
+
+Level 52, Hang Tight:
+
+Level 53, Hooked:
+
+Level 54, Apple Harvest:
+
+
+Multiplayer times:
+
+Level 1, Warm Up:
+    00:07:75    snake, boa
+    00:08:21    snake, boa
+
+Level 2, Flat Track:
+
+Level 3, Twin Peaks:
+
+Level 4, Over and Under:
+
+Level 5, Uphill Battle:
+
+Level 6, Long Haul:
+
+Level 7, Hi Flyer:
+
+Level 8, Tag:
+
+Level 9, Tunnel Terror:
+
+Level 10, The Steppes:
+
+Level 11, Gravity Ride:
+
+Level 12, Islands in the Sky:
+
+Level 13, Hill Legend:
+
+Level 14, Loop-de-Loop:
+
+Level 15, Serpents Tale:
+
+Level 16, New Wave:
+
+Level 17, Labyrinth:
+
+Level 18, Spiral:
+
+Level 19, Turnaround:
+
+Level 20, Upside Down:
+
+Level 21, Hangman:
+
+Level 22, Slalom:
+
+Level 23, Quick Round:
+
+Level 24, Ramp Frenzy:
+
+Level 25, Precarious:
+
+Level 26, Circuitous:
+
+Level 27, Shelf Life:
+
+Level 28, Bounce Back:
+
+Level 29, Headbanger:
+
+Level 30, Pipe:
+
+Level 31, Animal Farm:
+
+Level 32, Steep Corner:
+
+Level 33, Zig-Zag:
+
+Level 34, Bumpy Journey:
+
+Level 35, Labyrinth Pro:
+
+Level 36, Fruit in the Den:
+
+Level 37, Jaws:
+
+Level 38, Curvaceous:
+
+Level 39, Haircut:
+
+Level 40, Double Trouble:
+
+Level 41, Framework:
+
+Level 42, Enduro:
+
+Level 43, He He:
+
+Level 44, Freefall:
+
+Level 45, Sink:
+
+Level 46, Bowling:
+
+Level 47, Enigma:
+
+Level 48, Downhill:
+
+Level 49, What the Heck:
+
+Level 50, Expert System:
+
+Level 51, Tricks Abound:
+
+Level 52, Hang Tight:
+
+Level 53, Hooked:
+
+Level 54, Apple Harvest:
+
+The following are the single player total times for individual players.
+If a player doesn't have a time in the top ten for a level, this
+will add ten minutes to the total time.
+08:50:14:53 snake
+08:40:37:87 boa
+
+The following are the combined total times for individual players. For each
+level the best time is choosen of either the player's single player best
+time, or the best multiplayer time where the player was one of the two
+players.
+If a player doesn't have such a time for a level, this will add ten
+minutes to the total time.
+08:50:07:75 snake
+08:30:45:62 boa
+
+The following is the anonymous total time of the best single player
+times. If there is no single player time for a level, this will
+add ten minutes to the total time.
+08:30:52:40
+
+The following is the anonymous combined total time of the best
+single or multiplayer times. If there is no single or multiplayer
+time for a level, this will add ten minutes to the total time.
+08:30:45:62
+
