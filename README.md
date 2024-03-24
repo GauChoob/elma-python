@@ -5,7 +5,7 @@
 ![Licence](https://img.shields.io/pypi/l/elma.svg)
 
 Elma Python Library is a python library for manipulating Elasto Mania files.
-Currently, it supports simple level and replay manipulation.
+Currently, it supports simple level, replay, LGR and state.dat manipulation and level rendering.
 
 
 ## Documentation
