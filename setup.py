@@ -3,8 +3,8 @@ from setuptools import setup
 
 setup(
     name='elma',
-    version='0.9.0',
-    url='http://github.com/sigvef/elma/',
+    version='0.10.0',
+    url='https://github.com/elmadev/elma-python',
     license='MIT',
     maintainer='Sigve Sebastian Farstad',
     maintainer_email='sigvefarstad@gmail.com',
