@@ -13,12 +13,30 @@ class LevelRenderer:
     DEFAULT_WIDTH = 1920
     DEFAULT_HEIGHT = 1080
     DEFAULT_PADDING = 10
+    DEFAULT_COLORS = {
+        "sky": (149, 184, 209),
+        "ground": (13, 59, 102),
+        "apple": (163, 22, 33),
+        "killer": (0, 0, 0),
+        "flower": (255, 255, 255),
+        "start": (254, 198, 1),
+    }
+    EOLSITE_COLORS = {
+        "sky": (241, 241, 241),
+        "ground": (51, 51, 51),
+        "apple": (175, 48, 48),
+        "killer": (0, 0, 0),
+        "flower": (247, 179, 20),
+        "start": (21, 156, 208),
+    }
 
     def __init__(self,
                  level: elma.models.Level,
                  max_width: Optional[int] = DEFAULT_WIDTH,
                  max_height: Optional[int] = DEFAULT_HEIGHT,
-                 padding: int = DEFAULT_PADDING) -> None:
+                 padding: int = DEFAULT_PADDING,
+                 colors: dict[str, tuple[int, int, int]] = DEFAULT_COLORS,
+                 gravity_arrows: bool = False) -> None:
         """
         Render image of a level
 
@@ -27,6 +45,8 @@ class LevelRenderer:
             max_width: optional maximum width of the rendered image in pixels or None
             max_height: optional maximum height of the rendered image in pixels or None
             padding: space around the image in pixels
+            colors: RGB color values for sky/ground/apple/killer/flower/start
+            gravity_arrows: render apples as gravity arrows if True
         """
         self.level = level
         self.padding = padding
@@ -47,17 +67,13 @@ class LevelRenderer:
                 self.scale = min(self.scale, height_scale)
             else:
                 self.scale = height_scale
-        self.colors = {
-            "sky": (149, 184, 209),
-            "ground": (13, 59, 102),
-            "apple": (163, 22, 33),
-            "killer": (0, 0, 0),
-            "flower": (255, 255, 255),
-            "start": (254, 198, 1),
-        }
+        self.colors = colors
+        self.gravity_arrows = gravity_arrows
 
     @classmethod
-    def with_scale(cls, level: elma.models.Level, scale: float, padding: int = DEFAULT_PADDING) -> LevelRenderer:
+    def with_scale(cls, level: elma.models.Level, scale: float, padding: int = DEFAULT_PADDING,
+                   colors: dict[str, tuple[int, int, int]] = DEFAULT_COLORS,
+                   gravity_arrows: bool = False) -> LevelRenderer:
         """
         Create a LevelRenderer with a constant scaling factor.
 
@@ -65,12 +81,16 @@ class LevelRenderer:
             level: Level object to render
             scale: scaling factor to convert level coordinates to pixels
             padding: space around the image in pixels
+            colors: RGB color values for sky/ground/apple/killer/flower/start
+            gravity_arrows: render apples as gravity arrows if True
 
         Returns:
             LevelRenderer instance
         """
         renderer = cls(level=level, padding=padding)
         renderer.scale = scale
+        renderer.colors = colors
+        renderer.gravity_arrows = gravity_arrows
         return renderer
 
     @property
@@ -181,6 +201,28 @@ class LevelRenderer:
         canvas.ellipse((0, 0, size, size), fill=mask_color)
         return im
 
+    def arrow_mask(self, obj: elma.models.Obj) -> Image:
+        """
+        Returns a binary mask of a gravity arrow shaped apple.
+        """
+        if obj.gravity == elma.models.Obj.GRAVITY_UP:
+            arrow = [(50, 0), (100, 40), (70, 40), (70, 100), (30, 100), (30, 40), (0, 40)]
+        elif obj.gravity == elma.models.Obj.GRAVITY_LEFT:
+            arrow = [(40, 0), (40, 30), (100, 30), (100, 70), (40, 70), (40, 100), (0, 50)]
+        elif obj.gravity == elma.models.Obj.GRAVITY_DOWN:
+            arrow = [(50, 100), (100, 60), (70, 60), (70, 0), (30, 0), (30, 60), (0, 60)]
+        elif obj.gravity == elma.models.Obj.GRAVITY_RIGHT:
+            arrow = [(0, 30), (60, 30), (60, 0), (100, 50), (60, 100), (60, 70), (0, 70)]
+        else:
+            raise NotImplementedError(f"Gravity arrow for gravity type {obj.gravity} not implemented")
+        size = round(2 * OBJECT_RADIUS * self.scale)
+        arrow = [(round(p[0] / 100.0 * size), round(p[1] / 100.0 * size)) for p in arrow]
+        im = Image.new('1', (size + 1, size + 1))
+        canvas = ImageDraw.Draw(im)
+        mask_color = 1
+        canvas.polygon(arrow, fill=mask_color)
+        return im
+
     def _render_polygons(self, im: Image) -> None:
         """
         Add rendered polygons to the given image.
@@ -200,6 +242,9 @@ class LevelRenderer:
                 color = self.colors["flower"]
             elif obj.type == elma.models.Obj.FOOD:
                 color = self.colors["apple"]
+                if self.gravity_arrows and obj.gravity != elma.models.Obj.GRAVITY_NORMAL:
+                    im.paste(color, position, self.arrow_mask(obj))
+                    continue
             elif obj.type == elma.models.Obj.KILLER:
                 color = self.colors["killer"]
             elif obj.type == elma.models.Obj.START:

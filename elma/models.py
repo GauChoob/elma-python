@@ -505,7 +505,9 @@ class Level(object):
                  max_height: Optional[int] = LevelRenderer.DEFAULT_HEIGHT,
                  scale: Optional[float] = None,
                  padding: int = LevelRenderer.DEFAULT_PADDING,
+                 colors: dict[str, tuple[int, int, int]] = LevelRenderer.DEFAULT_COLORS,
                  render_objects: bool = True,
+                 gravity_arrows: bool = False,
                  show: bool = False) -> Image:
         """
         Render image of the level.
@@ -516,14 +518,18 @@ class Level(object):
             scale: scaling factor to convert level coordinates to pixels,
                 overrides max_width and max_height
             padding: space around the image in pixels
+            colors: RGB color values for sky/ground/apple/killer/flower/start
             render_objects: render both objects and polygons if True,
                 else render only polygons
+            gravity_arrows: render apples as gravity arrows if True
             show: show rendered image if True
         """
         if scale:
-            renderer = LevelRenderer.with_scale(level=self, scale=scale, padding=padding)
+            renderer = LevelRenderer.with_scale(level=self, scale=scale, padding=padding, colors=colors,
+                                                gravity_arrows=gravity_arrows)
         else:
-            renderer = LevelRenderer(level=self, max_width=max_width, max_height=max_height, padding=padding)
+            renderer = LevelRenderer(level=self, max_width=max_width, max_height=max_height, padding=padding,
+                                     colors=colors, gravity_arrows=gravity_arrows)
         if show:
             renderer.show(render_objects=render_objects)
         return renderer.render(render_objects=render_objects)
