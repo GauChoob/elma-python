@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='elma',
-    version='0.10.0',
+    version='0.11.0',
     url='https://github.com/elmadev/elma-python',
     license='MIT',
     maintainer='Sigve Sebastian Farstad',
@@ -12,7 +12,7 @@ setup(
     test_suite="tests",
     packages=['elma'],
     install_requires=[
-        'pillow>=4.0.0',
+        'pillow>=8.0.0',
     ],
     tests_require=[
         'flake8>=3.3.0',
