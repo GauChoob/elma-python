@@ -1,6 +1,7 @@
 import unittest
 from PIL import Image
 from elma.packing import unpack_level
+from elma.render import LevelRenderer
 
 
 class TestLevelRender(unittest.TestCase):
@@ -17,6 +18,20 @@ class TestLevelRender(unittest.TestCase):
         im_rendered_polygons = level.as_image(max_width=2000, max_height=None, padding=10, render_objects=False)
         im_polygons = Image.open('tests/files/qwquu039_polygons.png').convert('RGB')
         self.assertEqual(im_rendered_polygons, im_polygons)
+
+    def test_color_scheme(self):
+        level = self.load_level('tests/files/qwquu011.lev')
+        im_rendered = level.as_image(max_width=2000, max_height=None, padding=10,
+                                     colors=LevelRenderer.EOLSITE_COLORS)
+        im = Image.open('tests/files/qwquu011_eolsite_colors.png').convert('RGB')
+        self.assertEqual(im_rendered, im)
+
+    def test_gravity_arrows(self):
+        level = self.load_level('tests/files/qwquu011.lev')
+        im_rendered = level.as_image(max_width=2000, max_height=None, padding=10,
+                                     colors=LevelRenderer.EOLSITE_COLORS, gravity_arrows=True)
+        im = Image.open('tests/files/qwquu011_gravity_arrows.png').convert('RGB')
+        self.assertEqual(im_rendered, im)
 
     def test_image_size(self):
         level = self.load_level('tests/files/qwquu039.lev')
