@@ -260,7 +260,7 @@ class LGR(object):
         return self.version == 12 or self.version == 13
 
     def __repr__(self) -> str:
-        return 'LGR(images: %s)' % self.images
+        return 'LGR(images: %s, version: %s)' % (self.images, self.version)
 
 
 def unpack_LGR(data_or_filename: Union[bytes, str, Path]) -> LGR:
