@@ -132,7 +132,8 @@ def check_LGR_error(lgro: Union[LGR, LGR_Image], palette: Optional[List[int]] = 
                 message.append([
                     ERR_SCALED_IMAGE_IN_LGR12,
                     lgro.images[j],
-                    "The LGR file has a scaled image (%s), but this is not supported in version 12. Use version 13 instead." % lgro.images[j].name])
+                    f"The LGR file has a scaled image ({lgro.images[j].name}), but this is not supported in version "
+                    "12. Use version 13 instead."])
 
             message_temp = check_LGR_error(lgro.images[i], use_palette)
             if message_temp:
@@ -360,7 +361,8 @@ def check_LGR_error(lgro: Union[LGR, LGR_Image], palette: Optional[List[int]] = 
                     message.append([
                         WARN_IGNORED_SCALING,
                         lgro,
-                        "Warning: %s appears to be scaled, but this special image's scaling data is discarded and ignored by the game" % (lgro.name)])
+                        "Warning: %s appears to be scaled, but this special image's scaling data is discarded "
+                        "and ignored by the game" % (lgro.name)])
 
         else:
             message.append([

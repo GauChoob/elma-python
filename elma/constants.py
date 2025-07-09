@@ -88,8 +88,9 @@ LGR_LIMITED_SIZE_FILES = [
     "q2susp2", "q2forarm", "q2up_arm", "q2head", "qflag"]
 
 #: List of files that cannot be scaled in LGR13
-LGR_NO_SCALING_FILES = ["q1body", "q1thigh", "q1leg", "q1bike", "q1wheel", "q1susp1", "q1susp2", "q1forarm", "q1up_arm", "q1head", "q2body",
-                        "q2thigh", "q2leg", "q2bike", "q2wheel", "q2susp1", "q2susp2", "q2forarm", "q2up_arm", "q2head", "qflag", "qframe", "qcolors"]
+LGR_NO_SCALING_FILES = ["q1body", "q1thigh", "q1leg", "q1bike", "q1wheel", "q1susp1", "q1susp2", "q1forarm", "q1up_arm",
+                        "q1head", "q2body", "q2thigh", "q2leg", "q2bike", "q2wheel", "q2susp1", "q2susp2", "q2forarm",
+                        "q2up_arm", "q2head", "qflag", "qframe", "qcolors"]
 
 #: Default palette used in default.lgr
 LGR_DEFAULT_PALETTE = [

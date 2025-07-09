@@ -184,7 +184,8 @@ class LGR_Image(object):
 
     def is_scaled(self) -> bool:
         """
-        Returns True if this image has width and height properties that are different from the actual images' pixel array sizes
+        Returns True if this image has width and height properties that are different from the actual images'
+        pixel array sizes
         """
         return self.height != -1 and self.height != self.img.height or self.width != -1 and self.width != self.img.width
 
@@ -386,8 +387,10 @@ def pack_LGR(lgr: LGR) -> bytes:
             x_len = f.tell()
             f.seek(0)
             if lgr.version == 12:
-                if (obj.width != -1 and obj.width != obj.img.width) or (obj.height != -1 and obj.height != obj.img.height):
-                    raise ValueError(f"The image '{obj.name}' {obj.width}/{obj.height} {obj.img.width}/{obj.img.height} is scaled and therefore is only compatible with LGR13, not LGR12.")
+                if ((obj.width != -1 and obj.width != obj.img.width) or
+                        (obj.height != -1 and obj.height != obj.img.height)):
+                    raise ValueError(f"The image '{obj.name}' {obj.width}/{obj.height} {obj.img.width}/{obj.img.height}"
+                                     " is scaled and therefore is only compatible with LGR13, not LGR12.")
                 x.extend([
                     null_padded('%s.pcx' % obj.name, 13),
                     bytes(obj.padding),
